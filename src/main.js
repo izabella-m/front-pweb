@@ -5,16 +5,34 @@
  */
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from '@/plugins';
 
 // Components
-import App from './App.vue'
+import App from './App.vue';
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 
-const app = createApp(App)
+import router from './router/index';
 
-registerPlugins(app)
+import { initializeApp } from 'firebase/app';
 
-app.mount('#app')
+const firebaseConfig = {
+  apiKey: "AIzaSyBM0wXgP5fHGRzaYKOaEFD-VUaKzGyz4VE",
+  authDomain: "lumiere-pweb.firebaseapp.com",
+  projectId: "lumiere-pweb",
+  storageBucket: "lumiere-pweb.appspot.com",
+  messagingSenderId: "596129220953",
+  appId: "1:596129220953:web:716ae336262a54399f6448"
+};
+
+  // Initialize Firebase
+initializeApp(firebaseConfig);
+
+const app = createApp(App);
+
+registerPlugins(app);
+
+app.use(router);
+
+app.mount('#app');

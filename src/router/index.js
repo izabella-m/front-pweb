@@ -1,26 +1,46 @@
-// Composables
-import { createRouter, createWebHistory } from 'vue-router'
-
-const routes = [
-  {
-    path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
-    children: [
-      {
-        path: '',
-        name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (Home-[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import('@/views/Home.vue'),
-      },
-    ],
-  },
-]
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-})
+  history: createWebHistory(),
+  routes: [
+    { path: "/", component: () => import ("../views/Home.vue")},
+    { path: "/register", component: () => import ("../views/Register.vue")},
+    { path: "/login", component: () => import ("../views/Login.vue")},
+    {
+      path: "/feed",
+      component: () => import ("../views/Feed.vue"),
+      meta:{
+        requiresAuth: true,
+      },
+    },
+  ],
+});
 
-export default router
+const getCurrentUser = () => {
+  return new Promise ((resolve, reject) => {
+    const removeListener = onAuthStateChanged (
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    );
+  });
+};
+
+router.beforeEach(async(to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)){
+    if (await getCurrentUser()){
+      next();
+    } else{
+      alert("you don't have access!");
+      next("/");
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;
