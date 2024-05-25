@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat>
+  <v-app-bar flat elevate-on-scroll>
     <v-app-bar-title>
       
     </v-app-bar-title>
