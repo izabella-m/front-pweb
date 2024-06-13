@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1> Create an Account</h1>
+    <h1>Criar uma conta</h1>
     <p><input type="text" placeholder="Email" v-model="email"/></p>
-    <p><input type="password" placeholder="Password" v-model="password"/></p>
-    <p><button @click="register">Submit</button></p>
-    <p><button @click="signInWithGoogle">sign In With Google</button></p>
+    <p><input type="password" placeholder="Senha" v-model="password"/></p>
+    <p><button @click="register">Entrar</button></p>
+    <p><button @click="signInWithGoogle">Entre com sua conta do Google</button></p>
   </div>
 </template>
 
