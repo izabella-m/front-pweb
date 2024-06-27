@@ -1,11 +1,11 @@
 <template>
   <nav>
-    <router-link to="/"> Home </router-link>
-    <router-link to="/feed"> Feed </router-link>
-    <router-link to="/register"> Register </router-link>
-    <router-link to="/login"> Login </router-link>
+    <router-link to="/"> Início </router-link>
+    <router-link to="/feed"> Notícias </router-link>
+    <router-link to="/register"> Registro </router-link>
+    <router-link to="/login"> Entrar </router-link>
     <router-link to="/perfil"> Perfil </router-link>
-    <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
+    <button @click="handleSignOut" v-if="isLoggedIn">Sair</button>
   </nav>
   <router-view/>
 </template>

@@ -36,7 +36,7 @@ onMounted(() => {
     email.value = user.email;
     name.value = user.displayName || '';
   } else {
-    console.error("User not logged in");
+    console.error("Usuário não logado");
   }
 });
 </script>

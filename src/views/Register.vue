@@ -5,7 +5,7 @@
     <p><input type="text" placeholder="Email" v-model="email"/></p>
     <p><input type="password" placeholder="Senha" v-model="password"/></p>
     <p><button @click="register">Registrar</button></p>
-    <p><button @click="signInWithGoogle">Entre com sua conta do Google</button></p>
+    <p><button @click="signInWithGoogle">Entre com a sua conta do Google</button></p>
   </div>
 </template>
 
