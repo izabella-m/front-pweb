@@ -4,6 +4,7 @@
     <router-link to="/feed"> Feed </router-link>
     <router-link to="/register"> Register </router-link>
     <router-link to="/login"> Login </router-link>
+    <router-link to="/perfil"> Perfil </router-link>
     <button @click="handleSignOut" v-if="isLoggedIn">Sign out</button>
   </nav>
   <router-view/>
