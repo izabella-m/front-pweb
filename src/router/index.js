@@ -16,6 +16,13 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
+    {
+      path: "/perfil",
+      component: () => import ("../views/Perfil.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
   ],
 });
 
@@ -38,8 +45,8 @@ router.beforeEach(async(to, from, next) => {
     if (await getCurrentUser()){
       next();
     } else{
-      alert("you don't have access!");
-      next("/");
+      alert("Você não tem acesso!");
+      next("/login");
     }
   } else {
     next();
