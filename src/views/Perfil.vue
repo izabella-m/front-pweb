@@ -10,6 +10,7 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
+                  <v-text-field v-model="name" label="Nome" readonly></v-text-field>
                   <v-text-field v-model="email" label="Email" readonly></v-text-field>
                 </v-col>
               </v-row>
@@ -25,6 +26,7 @@
 import { ref, onMounted } from 'vue';
 import { getAuth } from 'firebase/auth';
 
+const name = ref('');
 const email = ref('');
 
 onMounted(() => {
@@ -32,8 +34,8 @@ onMounted(() => {
   const user = auth.currentUser;
   if (user) {
     email.value = user.email;
+    name.value = user.displayName || '';
   } else {
-    // Handle case where user is not logged in
     console.error("User not logged in");
   }
 });

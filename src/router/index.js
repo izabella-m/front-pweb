@@ -9,23 +9,10 @@ const router = createRouter({
     { path: "/", component: () => import ("../views/Home.vue")},
     { path: "/register", component: () => import ("../views/Register.vue")},
     { path: "/login", component: () => import ("../views/Login.vue")},
-    {
-      path: "/feed",
-      component: () => import ("../views/Feed.vue"),
-      meta:{
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/perfil",
-      component: () => import ("../views/Perfil.vue"),
-      meta: {
-        requiresAuth: true,
-      },
-    },
+    { path: "/feed", component: () => import ("../views/Feed.vue"), meta:{ requiresAuth: true }},
+    { path: "/perfil", component: () => import ("../views/Perfil.vue"), meta: { requiresAuth: true }},
   ],
 });
-
 
 const getCurrentUser = () => {
   return new Promise ((resolve, reject) => {
