@@ -22,7 +22,12 @@ let auth;
 onMounted(() => {
   auth = getAuth ();
   onAuthStateChanged(auth, (user) => {
-    isLoggedIn.value = !!user;
+    if (user){
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false
+    }
+
   });
 });
 
@@ -30,6 +35,7 @@ const handleSignOut = () => {
   signOut(auth).then(() => {
     router.push("/");
   });
+
 };
 
 </script>

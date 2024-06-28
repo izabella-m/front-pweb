@@ -1,8 +1,6 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -13,7 +11,6 @@ const router = createRouter({
     { path: "/perfil", component: () => import ("../views/Perfil.vue"), meta: { requiresAuth: true }},
   ],
 });
-
 const getCurrentUser = () => {
   return new Promise ((resolve, reject) => {
     const removeListener = onAuthStateChanged (
@@ -26,7 +23,6 @@ const getCurrentUser = () => {
     );
   });
 };
-
 router.beforeEach(async(to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)){
     if (await getCurrentUser()){
@@ -39,5 +35,4 @@ router.beforeEach(async(to, from, next) => {
     next();
   }
 });
-
 export default router;
