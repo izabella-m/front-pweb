@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-main class="backgroundPage">
-      
         <v-carousel class="d-md-none" progress="primary" hide-delimiters>
           <v-carousel-item cover>
            <img src="/src/assets/bannerMovies.png"/>
