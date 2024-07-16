@@ -1,12 +1,5 @@
 <template>
-  <nav>
-    <router-link to="/"> Início </router-link>
-    <router-link to="/feed"> Notícias </router-link>
-    <router-link to="/register"> Registro </router-link>
-    <router-link to="/login"> Entrar </router-link>
-    <router-link to="/perfil"> Perfil </router-link>
-    <button @click="handleSignOut" v-if="isLoggedIn">Sair</button>
-  </nav>
+  <NavBar />
   <router-view/>
 </template>
 
@@ -14,7 +7,7 @@
 import { onMounted, ref } from 'vue';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import router from './router/index';
-
+import NavBar from './components/NavBar.vue';
 
 const isLoggedIn = ref(false);
 
@@ -27,7 +20,6 @@ onMounted(() => {
     } else {
       isLoggedIn.value = false
     }
-
   });
 });
 
@@ -35,7 +27,6 @@ const handleSignOut = () => {
   signOut(auth).then(() => {
     router.push("/");
   });
-
 };
 
 </script>
