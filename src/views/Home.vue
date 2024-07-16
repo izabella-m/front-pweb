@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <v-btn to="/login"> login</v-btn>
+    <v-btn to="/register"> register</v-btn>
 
     <h3> LINK PARA O REPOSITÓRIO</h3>
     <ul>
