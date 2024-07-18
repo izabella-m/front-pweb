@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-main class="backgroundPage">
-      
         <v-carousel class="d-md-none" progress="primary" hide-delimiters>
           <v-carousel-item cover>
            <img src="/src/assets/bannerMovies.png"/>
@@ -23,7 +22,7 @@
     data: () => ({
       return: {
       },
-    
+
     }),
   }
 </script>
@@ -37,7 +36,7 @@ font-family: 'Sora', sans-serif;
 }
 
 .backgroundPage {
-  background-color: #000000; 
+  background-color: #000000;
 }
 
 </style>

@@ -1,6 +1,5 @@
 <template>
   <v-app style="background-color: #1e1e1e">
-    <h3 class="titleSeccion ml-4 mb-n2">Featured</h3>
     <div class="mx-n10">
       <v-slide-group
         v-model="currentSlide"
@@ -27,7 +26,7 @@
       </v-slide-group>
     </div>
     <Categories/>
-      </v-app>
+  </v-app>
 </template>
 
 
