@@ -18,6 +18,9 @@
                   <v-text-field v-model="name" label="Nome" readonly></v-text-field>
                   <v-text-field v-model="email" label="Email" readonly></v-text-field>
                 </v-col>
+                <v-col cols="12" class="d-flex justify-center mt-4">
+                  <v-btn color="error" @click="signOutUser">Sair</v-btn>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -29,12 +32,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAuth } from 'firebase/auth';
-import defaultAvatar from '@/assets/avatar.jpg'
+import { getAuth, signOut } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import defaultAvatar from '@/assets/avatar.jpg';
 
 const name = ref('');
 const email = ref('');
 const avatarUrl = ref(defaultAvatar);
+const router = useRouter();
+
 
 onMounted(() => {
   const auth = getAuth();
@@ -47,6 +53,15 @@ onMounted(() => {
     console.error("User not logged in");
   }
 });
+
+const signOutUser = () => {
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    router.push('/login');
+  }).catch((error) => {
+    console.error("Erro ao fazer logout:", error);
+  });
+};
 </script>
 
 <style scoped>
