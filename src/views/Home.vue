@@ -1,37 +1,42 @@
 <template>
-  <div class="hello">
-    <v-btn to="/login"> login</v-btn>
-    <v-btn to="/register"> register</v-btn>
-
-    <h3> LINK PARA O REPOSITÓRIO</h3>
-    <ul>
-      <li><a href="https://github.com/izabella-m/front-pweb" target="_blank" rel="noopener">LUMIERE</a></li>
-    </ul>
-  </div>
+  <v-app>
+    <v-main class="backgroundPage">
+        <v-carousel class="d-md-none" progress="primary" hide-delimiters>
+          <v-carousel-item cover>
+           <img src="/src/assets/bannerMovies.png"/>
+          </v-carousel-item>
+          <v-carousel-item>
+            <img src="/src/assets/chairsMovies.jpg"/>
+          </v-carousel-item>
+          <v-carousel-item >
+            <img default src="/src/assets/chairsMovies.jpg"/>
+          </v-carousel-item>
+        </v-carousel>
+        <!-- <v-img src="/"></v-img> -->
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String,
+  export default {
+    data: () => ({
+      return: {
+      },
+
+    }),
   }
-}
 </script>
 
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Sora&display=swap');
+
+* {
+font-family: 'Sora', sans-serif;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.backgroundPage {
+  background-color: #000000;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

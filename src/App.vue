@@ -1,6 +1,10 @@
 <template>
-  <NavBar />
-  <router-view/>
+  <div id="app">
+    <router-view v-slot="{ Component, route }">
+      <NavBar v-if="!route.meta.hideNavbar && isLoggedIn" />
+      <component :is="Component" />
+    </router-view>
+  </div>
 </template>
 
 <script setup>

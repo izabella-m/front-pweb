@@ -4,11 +4,12 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
-    { path: "/", component: () => import ("../views/Home.vue")},
-    { path: "/register", component: () => import ("../views/Register.vue")},
-    { path: "/login", component: () => import ("../views/Login.vue")},
+    { path: "/", component: () => import ("../views/LandingPage"), meta:{ hideNavbar: true }},
+    { path: "/register", component: () => import ("../views/Register.vue"), meta:{ hideNavbar: true }},
+    { path: "/login", component: () => import ("../views/Login.vue"), meta:{ hideNavbar: true }},
+    { path: "/home", component: () => import ("../views/Home.vue"), meta:{ requiresAuth: true }},
     { path: "/feed", component: () => import ("../views/Feed.vue"), meta:{ requiresAuth: true }},
-    { path: "/profile", component: () => import ("../views/profile.vue"), meta: { requiresAuth: true }},
+    { path: "/profile", component: () => import ("../views/profile.vue"), meta: { requiresAuth: true}},
     { path: "/popular", component: () => import ("../views/popularMovies.vue"), meta: { requiresAuth: true }},
     { path: "/explore", component: () => import ("../views/explorePage.vue"), meta: { requiresAuth: true }},
     { path: "/:id", component: () => import ("../views/categoriesPage.vue"), meta: { requiresAuth: true }},
