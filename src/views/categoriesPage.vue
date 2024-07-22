@@ -1,51 +1,56 @@
 <template>
   <v-app style="background-color: #1e1e1e">
-    <router-link id="btnHome" to="/">Voltar para a página inicial</router-link>
-    <v-row class="mx-12 mt-12 mb-6">
-      <!-- <p>{{ categoryID }}</p> -->
-        <v-card  v-for="movie in movies" :key="movie.imdbID" class="cardPrincipal mb-4 justify-center mx-auto" :elevation="2">
-          <!-- <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
-          </v-img> -->
-          <div class="image-container">
-            <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
-            </v-img>
-
-            <div class="overlay px-4 d-flex align-start flex-column">
-              <h1 class="styleTitleMovie mt-3 mb-auto">{{ movie.title }}</h1>
-              <v-rating
-                readonly
-              ></v-rating>
-          
-              <v-row class="align-end mb-2">
-                <div class="mt-12">
-                  <p>{{ movie.release_date.split('-')[0] }}</p>
-                </div>
-                <div class="mx-auto">
-                  <v-btn class="mr-2" color="#00B9AE" icon="mdi-heart-outline" height="50" style="border-radius: 13px; max-width: 50px;">
-                  </v-btn>
-                  <v-btn :elevation="0" class="teste" height="49" width="150" style="border-radius: 13px">
-                    <p class="textBtnSeeMore">Veja mais</p>
-                  </v-btn>
-                </div>                 
-              </v-row>
-
-            </div>
-          </div>  
-          <!-- <v-card-title class="styleTitleMovie">{{ movie.title }}</v-card-title>
-          <v-card-title class="styleTitleMovie">{{ movie.release_date }}</v-card-title>
-          <v-rating
-            v-model="scaledVoteAverage"
-            class="ma-2"
-            density="compact"
-            ></v-rating>
-          <v-row>
-            <v-card-subtitle class="styleYearMovie" v-if="movie.Year">{{ movie.Year }}</v-card-subtitle>
-            <v-btn width="10" @click="toggleHeart" variant="plain">
-              <v-icon>{{ isFavorited ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
-            </v-btn>
-          </v-row>
-          <v-card-text>{{ movie.Plot }}</v-card-text> -->
+    <router-link id="btnHome" to="/feed"><v-icon>mdi-chevron-left</v-icon>Voltar para a página inicial</router-link>
+    <v-row class="mx-5 mt-12">
+      <v-hover v-slot="{ isHovering, props }">
+        <v-card 
+          v-bind="props"
+          :elevation="isHovering ? 50 : 6" 
+          @click="openModal(movie)"  
+          v-for="movie in movies" 
+          :key="movie.imdbID" 
+          class="cardPrincipal mb-4 justify-center mx-auto" 
+        >
+            <v-img height="290" cover class="m-0 p-0" :src="getImageUrl(movie.poster_path)">
+             <div class="justify-end">
+              <v-chip class="">
+                <v-icon class="mr-2" color="#ffd54b">mdi-star</v-icon>
+                <p style="font-family: Inter; font-weight: 700; color: #ffd54b">{{ (movie.vote_average).toFixed(1) }}</p>
+              </v-chip>
+             </div>
+            </v-img>          
+              <h1 class="styleTitleMovie ml-3 mt-3">{{ movie.title }}</h1>
+              <div class="ml-3">
+                <p class="styleYearMovieCard">{{ movie.release_date.split('-')[0] }}</p>
+              </div>
+               
+              <div class="d-flex align-end flex-column mr-2 mt-2">
+                <v-btn 
+                  @click="movieSaveDatabase" 
+                  class="btnSaveMovie mt-auto" 
+                  icon="mdi-heart-outline" 
+                  height="40" 
+                  style="border-radius: 13px; max-width: 40px;"
+                >
+                </v-btn>
+              </div>                 
         </v-card>
+
+        <v-dialog v-model="modalDetails" width="auto">
+
+          <v-card max-width="800" color="#1e1e1e" :elevation="6">
+            <v-img class="imageDialog" :src="getImageUrl(selectedMovie?.backdrop_path)" cover>
+                <p @click="modalDetails = false" class="backToList"><v-icon>mdi-chevron-left</v-icon>Voltar</p>
+                <h2 style="opacity: 10" class="dialogTitleMovie">{{ selectedMovie?.title }}</h2>
+                <div>
+                  <v-card-text class="d-flex">
+                    <p class="dialogDescriptionMovie">{{ selectedMovie?.overview }}</p>
+                  </v-card-text>
+                </div> 
+            </v-img>
+          </v-card>
+        </v-dialog>
+      </v-hover>
     </v-row>
   </v-app>
 </template>
@@ -59,6 +64,8 @@ import apiGenre from '/src/services/apiGenre.js';
         movies: [],
         isFavorited: false,
         categoryID: window.location.pathname.split('/')[1],
+        modalDetails: false,
+        selectedMovie: null,
       };
     },
     methods: {
@@ -80,6 +87,10 @@ import apiGenre from '/src/services/apiGenre.js';
       getImageUrl(path) {
         const baseUrl = 'https://image.tmdb.org/t/p/w500';
         return `${baseUrl}${path}`;
+      },  
+      openModal(movie) { //modal dos detalhes do filme
+        this.selectedMovie = movie;
+        this.modalDetails = true;
       },
     },
     created() {
@@ -93,13 +104,11 @@ import apiGenre from '/src/services/apiGenre.js';
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
   
   .cardPrincipal {
-    width: 237px;
-    height: 298px;
-  }
-  .image-container {
-    position: relative;
-    width: 100%;
-    height: 296px;
+    width: 210px;
+    height: 400px;
+    background-color: #0c0c0c !important;
+    border-radius: 15px;
+    cursor: pointer;
   }
   
   .overlay {
@@ -125,27 +134,38 @@ import apiGenre from '/src/services/apiGenre.js';
     margin: 0;
   }
   .styleTitleMovie {
-    font-size: 20px;
+    font-size: 15px;
     font-family: Poppins;
     font-weight: 80px;
     letter-spacing: 0.1px;
     color: #f9f9f9;
   }
-  .textBtnSeeMore {
-    color: rgb(255, 255, 255); 
-    font-size: 14px;
-    font-family: Inter;
-    font-weight: 700;
-  }
-  .styleYearMovie {
+
+  .styleYearMovieCard {
     font-size: 16px;
-    color: grey;
+    color: rgb(210, 210, 210);
+    font-size: 12px;
+    font-weight: 600;
   }
-  
-  .teste {
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.3); /* Ajuste a cor e a opacidade conforme necessário */
-      color: white;
+
+  .btnSaveMovie {
+    background: linear-gradient(to right, #2203FF, #C40D60) !important;
+  }
+
+.imageDialog {
+  opacity: 0.5;
+
+}
+
+  .dialogTitleMovie {
+    color: #ffffff;
+    font-family: Poppins;
+ 
+  }
+
+  .dialogDescriptionMovie {
+    font-family: Inter;
+
   }
   </style>
   
