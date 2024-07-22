@@ -1,6 +1,6 @@
 <template>
   <v-app style="background-color: #1e1e1e">
-    <v-container>
+    <div>
       <v-text-field
         v-model="searchQuery"
         @keyup.enter="searchMovies"
@@ -9,47 +9,55 @@
         placeholder="Pesquisar filmes"
         hide-details
         rounded
-        single-line
         @click:append-inner="searchMovies"
+        max-width="200"
+        variant="flat"
+        bg-color="white"
       ></v-text-field> 
-      <v-row v-if="movies.length" class="mt-3">
-        <div
-          v-for="movie in movies"
-          :key="movie.imdbID"
-          class="ma-3 mx-auto"
-        >
-        <v-hover v-slot="{ isHovering, props }">
-
-          <v-card class="cardPrincipal" :elevation="2" v-bind="props">
-            <v-img height="296" cover :src="movie.Poster">
-              <v-expand-transition>
-                <div
-                  v-if="isHovering"
-                  class="d-flex transition-fast-in-fast-out bg-grey-darken-2 v-card--reveal text-h2"
-                  style="height: 100%"
-                >
-                  See more
-                </div>
-              </v-expand-transition>
-            </v-img>
-            <v-card-title class="styleTitleMovie">{{ movie.Title }}</v-card-title>
-            <v-row>
-              <v-card-subtitle class="styleYearMovie" v-if="movie.Year">{{ movie.Year }}</v-card-subtitle>
-              <v-btn width="10" @click="toggleHeart" variant="plain">
-                <v-icon>{{ isFavorited ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
-              </v-btn>
-            </v-row>
-            <v-card-text>{{ movie.Plot }}</v-card-text>
-          </v-card>
-        </v-hover>
+    </div>
+    <v-row v-if="movies.length" class="mt-12 mx-0">
+      <div
+        v-for="movie in movies"
+        :key="movie.imdbID"
+        class="ma-3 mx-auto"
+      >
+        <v-card class="cardPrincipal mb-4 justify-center mx-auto">
+        <v-img height="290" cover class="m-0 p-0" :src="movie.Poster"></v-img>
+        <h1 class="styleTitleMovie ml-3 mt-3">{{ movie.Title }}</h1>
+        <div class="ml-3">
+          <p class="styleYearMovieCard">{{ movie.Year }}</p>
         </div>
-      </v-row>
+        <div class="d-flex align-end flex-column mr-2 mt-2">
+          <v-btn 
+            @click="movieSaveDatabase" 
+            class="btnSaveMovie mt-auto" 
+            icon="mdi-heart-outline" 
+            height="40" 
+            style="border-radius: 13px; max-width: 40px;"
+          >
+          </v-btn>
+        </div>                 
+        </v-card>
+        <v-dialog v-model="modalDetails" width="auto">
+          <v-card max-width="800" color="#1e1e1e" :elevation="6">
+            <v-img class="imageDialog" :src="getImageUrl(selectedMovie?.backdrop_path)" cover>
+                <p @click="modalDetails = false" class="backToList"><v-icon>mdi-chevron-left</v-icon>Voltar</p>
+                <h2 style="opacity: 10" class="dialogTitleMovie">{{ selectedMovie?.title }}</h2>
+                <div>
+                  <v-card-text class="d-flex">
+                    <p class="dialogDescriptionMovie">{{ selectedMovie?.overview }}</p>
+                  </v-card-text>
+                </div> 
+            </v-img>
+          </v-card>
+        </v-dialog>
+      </div>
+    </v-row>
       <!-- <v-alert v-else-if="!loading && movies.length === 0" type="info">
         Nenhum filme do ano 2000 encontrado
       </v-alert>
       <v-alert type="error" v-if="error">{{ error }}</v-alert>
       <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>  -->
-    </v-container>
   </v-app>
 </template>
 
@@ -73,6 +81,8 @@ export default {
       movies: [],
       isFavorited: false, // card do resultado da pesquisa
       searchQuery: '', // v-model da pesquisa
+      modalDetails: false,
+      selectedMovie: null,
     };
   },
   created() {
@@ -96,7 +106,7 @@ export default {
       this.error = null;
 
       console.log('Iniciando requisição para a API...');
-      
+
       try {
         const response = await api.get('', {
           params: { i: 'tt3896198' }
@@ -147,31 +157,96 @@ export default {
         this.isSelectedPagePrincipal = !this.isSelectedPagePrincipal; // Altera o estado do botão
       },
       async searchMovies() {
-      if (!this.searchQuery) {
-        alert('Preencha o campo de pesquisa!');
-        return;
-      }
-
-      this.loading = true;
-      this.error = null;
-
-      try {
-        const response = await api.get('', {
-          params: { s: this.searchQuery, apikey: 'd8c16e35' }
-        });
-
-        if (response.data.Response === 'False') {
-          this.error = response.data.Error;
-          this.movies = [];
-        } else {
-          this.movies = response.data.Search;
+        if (!this.searchQuery) {
+          alert('Preencha o campo de pesquisa!');
+          return;
         }
-      } catch (error) {
-        this.error = 'Erro ao carregar os dados: ' + error.message;
-      } finally {
-        this.loading = false;
-      }
+
+        this.loading = true;
+        this.error = null;
+        this.movies = [];
+
+        try {
+          const promises = [];
+          const resultsPerPage = 10; // OMDb retorna 10 resultados por página
+          const totalPages = 5; // Queremos 50 resultados, então 5 páginas
+
+          for (let page = 1; page <= totalPages; page++) {
+            const promise = api.get('', {
+              params: { s: this.searchQuery, apikey: 'd8c16e35', page }
+            });
+            promises.push(promise);
+          }
+
+          const responses = await Promise.all(promises);
+
+          responses.forEach(response => {
+            console.log('Resposta da API:', response.data); // Log da resposta da API
+
+            if (response.data.Response === 'True') {
+              this.movies.push(...response.data.Search);
+            } else if (response.data.Response === 'False' && !this.error) {
+              this.error = response.data.Error;
+            }
+          });
+
+          if (this.movies.length === 0 && this.error) {
+            this.error = 'Nenhum filme encontrado';
+          }
+        } catch (error) {
+          this.error = 'Erro ao carregar os dados: ' + error.message;
+        } finally {
+          this.loading = false;
+        }
+      },
+    openModal(movie) { //modal dos detalhes do filme
+      this.selectedMovie = movie;
+      this.modalDetails = true;
     },
   }
 };
 </script>
+
+<style>
+
+  .cardPrincipal {
+    width: 210px;
+    height: 400px;
+    background-color: #0c0c0c !important;
+    border-radius: 15px !important;
+    cursor: pointer;
+  }
+
+  .styleTitleMovie {
+    font-size: 15px;
+    font-family: Poppins;
+    font-weight: 80px;
+    letter-spacing: 0.1px;
+    color: #f9f9f9;
+  }
+
+  .styleYearMovieCard {
+    font-size: 16px;
+    color: rgb(210, 210, 210);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .btnSaveMovie {
+    background: linear-gradient(to right, #2203FF, #C40D60) !important;
+  }
+
+  .imageDialog {
+    opacity: 0.5;
+  }
+  
+  .dialogTitleMovie {
+    color: #ffffff;
+    font-family: Poppins;
+  }
+
+  .dialogDescriptionMovie {
+    font-family: Inter;
+  }
+</style>
+
