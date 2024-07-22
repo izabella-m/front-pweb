@@ -1,36 +1,54 @@
 <template>
   <v-app style="background-color: #1e1e1e">
-    <v-container class="m-0 p-0">
     <v-row class="mx-0 mt-12">
-        <v-card  v-for="movie in movies" :key="movie.imdbID" class="cardPrincipal justify-center mx-auto" :elevation="2">
-          <!-- <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
-          </v-img> -->
-          <div class="image-container">
+      <v-hover v-slot="{ isHovering, props }">
+        <v-card
+          v-bind="props"
+          :elevation="isHovering ? 50 : 6" 
+          @click="openModal(movie)"  
+          v-for="movie in movies" 
+          :key="movie.imdbID" 
+          class="cardPrincipal mb-4 justify-center mx-auto" 
+         >
             <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
+              <div class="justify-end">
+                <v-chip class="">
+                  <v-icon class="mr-2" color="#ffd54b">mdi-star</v-icon>
+                  <p style="font-family: Inter; font-weight: 700; color: #ffd54b">{{ (movie.vote_average).toFixed(1) }}</p>
+                </v-chip>
+               </div>
             </v-img>
-
-            <div class="overlay px-4 d-flex align-start flex-column">
-              <h1 class="styleTitleMovie mt-3 mb-auto">{{ movie.title }}</h1>
-              <v-rating
-                readonly
-              ></v-rating>
-          
-              <v-row class="align-end mb-2">
-                <div class="mt-12">
-                  <p>{{ movie.release_date.split('-')[0] }}</p>
-                </div>
-                <div class="mx-auto">
-                  <v-btn class="mr-2" color="#00B9AE" icon="mdi-heart-outline" height="50" style="border-radius: 13px; max-width: 50px;">
-                  </v-btn>
-                  <v-btn :elevation="0" class="teste" height="49" width="150" style="border-radius: 13px">
-                    <p class="textBtnSeeMore">Veja mais</p>
-                  </v-btn>
-                </div>                 
-              </v-row>
-
+            <h1 class="styleTitleMovie ml-3 mt-3">{{ movie.title }}</h1>
+            <div class="ml-3">
+              <p class="styleYearMovieCard">{{ movie.release_date.split('-')[0] }}</p>
             </div>
-          </div>  
-          <!-- <v-card-title class="styleTitleMovie">{{ movie.title }}</v-card-title>
+            <div class="d-flex align-end flex-column mr-2 mt-2">
+              <v-btn 
+                @click="movieSaveDatabase" 
+                class="btnSaveMovie mt-auto" 
+                icon="mdi-heart-outline" 
+                height="40" 
+                style="border-radius: 13px; max-width: 40px;"
+              >
+              </v-btn>
+            </div>                  
+            <v-dialog v-model="modalDetails" width="auto">
+
+              <v-card max-width="800" color="#1e1e1e" :elevation="6">
+                <v-img class="imageDialog" :src="getImageUrl(selectedMovie?.backdrop_path)" cover>
+                    <p @click="modalDetails = false" class="backToList"><v-icon>mdi-chevron-left</v-icon>Voltar</p>
+                    <h2 style="opacity: 10" class="dialogTitleMovie">{{ selectedMovie?.title }}</h2>
+                    <div>
+                      <v-card-text class="d-flex">
+                        <p class="dialogDescriptionMovie">{{ selectedMovie?.overview }}</p>
+                      </v-card-text>
+                    </div> 
+                </v-img>
+    
+                
+              </v-card>
+            </v-dialog>
+                <!-- <v-card-title class="styleTitleMovie">{{ movie.title }}</v-card-title>
           <v-card-title class="styleTitleMovie">{{ movie.release_date }}</v-card-title>
           <v-rating
             v-model="scaledVoteAverage"
@@ -45,8 +63,8 @@
           </v-row>
           <v-card-text>{{ movie.Plot }}</v-card-text> -->
         </v-card>
+      </v-hover>
     </v-row>
-  </v-container>
   </v-app>
 </template>
 
@@ -58,7 +76,8 @@ export default {
     return {
       movies: [],
       isHovering: false,
-      isFavorited: false
+      isFavorited: false,
+      modalDetails:  false
     };
   },
   methods: {
@@ -95,9 +114,10 @@ export default {
       const baseUrl = 'https://image.tmdb.org/t/p/w500';
       return `${baseUrl}${path}`;
     },
-    convertToFiveStars(value) {
-        return value / 2;
-     }  // Divide o valor por 2 para obter a escala correta
+    openModal(movie) { //modal dos detalhes do filme
+      this.selectedMovie = movie;
+      this.modalDetails = true;
+    },
   },
   computed: {
 
@@ -113,9 +133,11 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 .cardPrincipal {
-  width: 237px;
-  height: 298px;
-  margin: 10px;  
+  width: 210px;
+  height: 400px;
+  background-color: #0c0c0c !important;
+  border-radius: 15px;
+  cursor: pointer;
 }
 
 .image-container {
@@ -147,12 +169,21 @@ export default {
   margin: 0;
 }
 .styleTitleMovie {
-  font-size: 20px;
+  font-size: 15px;
   font-family: Poppins;
   font-weight: 80px;
   letter-spacing: 0.1px;
   color: #f9f9f9;
 }
+
+.styleYearMovieCard {
+  font-size: 16px;
+  color: rgb(210, 210, 210);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
 .textBtnSeeMore {
   color: rgb(255, 255, 255); 
   font-size: 14px;
@@ -168,5 +199,24 @@ export default {
     backdrop-filter: blur(5px);
     background-color: rgba(255, 255, 255, 0.3); /* Ajuste a cor e a opacidade conforme necessário */
     color: white;
+}
+.btnSaveMovie {
+  background: linear-gradient(to right, #2203FF, #C40D60) !important;
+}
+
+.imageDialog {
+opacity: 0.5;
+
+}
+
+.dialogTitleMovie {
+  color: #ffffff;
+  font-family: Poppins;
+
+}
+
+.dialogDescriptionMovie {
+  font-family: Inter;
+
 }
 </style>
