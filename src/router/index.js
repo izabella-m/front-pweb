@@ -1,6 +1,8 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import Favorites from '/src/views/favorites.vue';
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
@@ -13,7 +15,7 @@ const router = createRouter({
     { path: "/popular", component: () => import ("../views/popularMovies.vue"), meta: { requiresAuth: true }},
     { path: "/explore", component: () => import ("../views/explorePage.vue"), meta: { requiresAuth: true }},
     { path: "/:id", component: () => import ("../views/categoriesPage.vue"), meta: { requiresAuth: true }},
-    { path: "/favorites", component: () => import ("../views/favorites.vue"), meta: { requiresAuth: true }},
+    { path: "/favorites", name: Favorites, component: () => import ("../views/favorites.vue"), meta: { requiresAuth: true }},
   ],
 
 });

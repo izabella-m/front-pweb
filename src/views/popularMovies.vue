@@ -4,64 +4,47 @@
       <v-hover v-slot="{ isHovering, props }">
         <v-card
           v-bind="props"
-          :elevation="isHovering ? 50 : 6" 
-          @click="openModal(movie)"  
-          v-for="movie in movies" 
-          :key="movie.imdbID" 
-          class="cardPrincipal mb-4 justify-center mx-auto" 
-         >
-            <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
-              <div class="justify-end">
-                <v-chip class="">
-                  <v-icon class="mr-2" color="#ffd54b">mdi-star</v-icon>
-                  <p style="font-family: Inter; font-weight: 700; color: #ffd54b">{{ (movie.vote_average).toFixed(1) }}</p>
-                </v-chip>
-               </div>
-            </v-img>
-            <h1 class="styleTitleMovie ml-3 mt-3">{{ movie.title }}</h1>
-            <div class="ml-3">
-              <p class="styleYearMovieCard">{{ movie.release_date.split('-')[0] }}</p>
+          :elevation="isHovering ? 50 : 6"
+          @click="openModal(movie)"
+          v-for="movie in movies"
+          :key="movie.imdbID"
+          class="cardPrincipal mb-4 justify-center mx-auto"
+        >
+          <v-img height="296" cover :src="getImageUrl(movie.backdrop_path)">
+            <div class="justify-end">
+              <v-chip class="">
+                <v-icon class="mr-2" color="#ffd54b">mdi-star</v-icon>
+                <p style="font-family: Inter; font-weight: 700; color: #ffd54b">{{ (movie.vote_average).toFixed(1) }}</p>
+              </v-chip>
             </div>
-            <div class="d-flex align-end flex-column mr-2 mt-2">
-              <v-btn 
-                @click="movieSaveDatabase" 
-                class="btnSaveMovie mt-auto" 
-                icon="mdi-heart-outline" 
-                height="40" 
-                style="border-radius: 13px; max-width: 40px;"
-              >
-              </v-btn>
-            </div>                  
-            <v-dialog v-model="modalDetails" width="auto">
-
-              <v-card max-width="800" color="#1e1e1e" :elevation="6">
-                <v-img class="imageDialog" :src="getImageUrl(selectedMovie?.backdrop_path)" cover>
-                    <p @click="modalDetails = false" class="backToList"><v-icon>mdi-chevron-left</v-icon>Voltar</p>
-                    <h2 style="opacity: 10" class="dialogTitleMovie">{{ selectedMovie?.title }}</h2>
-                    <div>
-                      <v-card-text class="d-flex">
-                        <p class="dialogDescriptionMovie">{{ selectedMovie?.overview }}</p>
-                      </v-card-text>
-                    </div> 
-                </v-img>
-    
-                
-              </v-card>
-            </v-dialog>
-                <!-- <v-card-title class="styleTitleMovie">{{ movie.title }}</v-card-title>
-          <v-card-title class="styleTitleMovie">{{ movie.release_date }}</v-card-title>
-          <v-rating
-            v-model="scaledVoteAverage"
-            class="ma-2"
-            density="compact"
-            ></v-rating>
-          <v-row>
-            <v-card-subtitle class="styleYearMovie" v-if="movie.Year">{{ movie.Year }}</v-card-subtitle>
-            <v-btn width="10" @click="toggleHeart" variant="plain">
-              <v-icon>{{ isFavorited ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+          </v-img>
+          <h1 class="styleTitleMovie ml-3 mt-3">{{ movie.title }}</h1>
+          <div class="ml-3">
+            <p class="styleYearMovieCard">{{ movie.release_date.split('-')[0] }}</p>
+          </div>
+          <div class="d-flex align-end flex-column mr-2 mt-2">
+            <v-btn
+              @click.stop="addMovieToFavorites(movie)"
+              class="btnSaveMovie mt-auto"
+              icon="mdi-heart-outline"
+              height="40"
+              style="border-radius: 13px; max-width: 40px;"
+            >
             </v-btn>
-          </v-row>
-          <v-card-text>{{ movie.Plot }}</v-card-text> -->
+          </div>
+          <v-dialog v-model="modalDetails" width="auto">
+            <v-card max-width="800" color="#1e1e1e" :elevation="6">
+              <v-img class="imageDialog" :src="getImageUrl(selectedMovie?.backdrop_path)" cover>
+                <p @click="modalDetails = false" class="backToList"><v-icon>mdi-chevron-left</v-icon>Voltar</p>
+                <h2 style="opacity: 10" class="dialogTitleMovie">{{ selectedMovie?.title }}</h2>
+                <div>
+                  <v-card-text class="d-flex">
+                    <p class="dialogDescriptionMovie">{{ selectedMovie?.overview }}</p>
+                  </v-card-text>
+                </div>
+              </v-img>
+            </v-card>
+          </v-dialog>
         </v-card>
       </v-hover>
     </v-row>
@@ -70,14 +53,17 @@
 
 <script>
 import api from '/src/services/api.js';
- 
+import { addFavorite } from '/src/services/favorites.js';
+import { useRouter } from 'vue-router';
+
 export default {
   data() {
     return {
       movies: [],
       isHovering: false,
       isFavorited: false,
-      modalDetails:  false
+      modalDetails: false,
+      selectedMovie: null
     };
   },
   methods: {
@@ -85,15 +71,14 @@ export default {
       try {
         const response = await api.get('', {
           params: {
-            s: 'movie', 
+            s: 'movie',
             type: 'movie',
             page: 1
           }
         });
         if (response.data.results) {
           this.movies = this.getRandomMovies(response.data.results, 50);
-          console.log('Resposta da API:', response.results.data);
-
+          console.log('Resposta da API:', response.data.results);
         }
       } catch (error) {
         console.error('Error fetching movies:', error);
@@ -103,24 +88,18 @@ export default {
       let shuffled = movies.sort(() => 0.5 - Math.random());
       return shuffled.slice(0, count);
     },
-    toggleHeart() {
-      this.isFavorited = !this.isFavorited;
-    },
-    scaledVoteAverage() {
-      // Divide a nota original por 2 para ajustar à escala de 0 a 5
-      return this.movie.vote_average / 2;
-    },
     getImageUrl(path) {
       const baseUrl = 'https://image.tmdb.org/t/p/w500';
       return `${baseUrl}${path}`;
     },
-    openModal(movie) { //modal dos detalhes do filme
+    openModal(movie) {
       this.selectedMovie = movie;
       this.modalDetails = true;
     },
-  },
-  computed: {
-
+    addMovieToFavorites(movie) {
+      addFavorite(movie);
+      alert('Filme adicionado à tela de favoritos');
+    }
   },
   created() {
     this.fetchMovies();
@@ -185,7 +164,7 @@ export default {
 
 
 .textBtnSeeMore {
-  color: rgb(255, 255, 255); 
+  color: rgb(255, 255, 255);
   font-size: 14px;
   font-family: Inter;
   font-weight: 700;
