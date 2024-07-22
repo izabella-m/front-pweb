@@ -4,7 +4,6 @@
       <v-responsive class="align-center text-center fill-height">
         <h1 class="titleLoginPage">Bem-vindo de volta</h1>
         <p class="textDescriptionLogin mb-5">Entre para explorar e continue sua jornada pelo mundo dos filmes</p>
-        
         <v-text-field 
           variant="underlined" 
           type="text" 
@@ -12,8 +11,6 @@
           v-model="email"
           class="mx-auto justify-center emailField" 
         />
-
-
         <v-text-field 
           variant="underlined" 
           class="mx-auto justify-center passwordField mb-10" 
@@ -21,9 +18,7 @@
           placeholder="Password" 
           v-model="password"
         />      
-        
         <p v-if="errMsg">{{ errMsg }}</p>
-
         <v-btn 
           @click="register"
           class="btnLogin"  
@@ -64,50 +59,50 @@ const password = ref("");
 const errMsg = ref("");
 const router = useRouter();
 
-const register = () => {
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, email.value, password.value)
-    .then(() => {
-      console.log("Successfully signed in");
-      console.log(auth.currentUser);
-      router.push('/feed');
-    })
-    .catch((error) => {
-      console.log(error.code);
-      switch (error.code) {
-        case "auth/invalid-email":
-          errMsg.value = "Email inválido";
-          break;
-        case "auth/user-not-found":
-          errMsg.value = "No account with that email was found";
-          break;
-        case "auth/wrong-password":
-          errMsg.value = "Senha incorreta";
-          break;
-        default:
-          errMsg.value = "Erro desconhecido";
-          break;
-      }
-    });
-};
+  const register = () => {
+    const auth = getAuth();
+      signInWithEmailAndPassword(auth, email.value, password.value)
+      .then(() => {
+        console.log("Successfully signed in");
+        console.log(auth.currentUser);
+        router.push('/feed');
+      })
+      .catch((error) => {
+        console.log(error.code);
+        switch (error.code) {
+          case "auth/invalid-email":
+            errMsg.value = "Email inválido";
+            break;
+          case "auth/user-not-found":
+            errMsg.value = "No account with that email was found";
+            break;
+          case "auth/wrong-password":
+            errMsg.value = "Senha incorreta";
+            break;
+          default:
+            errMsg.value = "Erro desconhecido";
+            break;
+        }
+      });
+  };
 
-const signInWithGoogle = () => {
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
+  const signInWithGoogle = () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
 
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log("Successfully signed in with Google");
-      console.log(result.user);
-      router.push('/feed');
-    })
-    .catch((error) => {
-      console.log(error.code);
-      errMsg.value = "Erro ao fazer login com o Google";
-    });
-};
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log("Successfully signed in with Google");
+        console.log(result.user);
+        router.push('/feed');
+      })
+      .catch((error) => {
+        console.log(error.code);
+        errMsg.value = "Erro ao fazer login com o Google";
+      });
+  };
 
-function goToRegister() {
+  function goToRegister() {
     router.push('/register');
   }
 </script>
@@ -136,7 +131,6 @@ function goToRegister() {
   color: #ffffff;
   max-width: 350px;
 }
-
 
 .passwordField {
   color: rgb(255, 255, 255);
