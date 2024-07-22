@@ -22,7 +22,7 @@
         />
 
         <v-btn
-          class="btnRegister" 
+          class="btnRegister mb-2" 
           @click="register" 
           rounded 
           width="280">
@@ -89,6 +89,7 @@
   function goToLogin() {
     router.push('/login');
   }
+  
 </script>
 
 <style>
