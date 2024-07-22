@@ -54,7 +54,6 @@
 <script>
 import api from '/src/services/api.js';
 import { addFavorite } from '/src/services/favorites.js';
-import { useRouter } from 'vue-router';
 
 export default {
   data() {
