@@ -4,41 +4,49 @@
       <v-responsive class="align-center text-center fill-height">
         <h1 class="titleRegisterPage">Cadastre-se agora mesmo</h1>
         <p class="textDescriptionRegister mb-5">Crie sua conta gratuitamente e tenha acesso a +10000 conteúdos para explorar</p>
-        
-        <v-text-field 
-          variant="underlined" 
-          class="mx-auto justify-center emailField" 
-          type="text" 
-          placeholder="Email" 
+
+        <v-text-field
+          variant="underlined"
+          class="mx-auto justify-center emailField"
+          type="text"
+          placeholder="Nome"
+          v-model="name"
+        />
+
+        <v-text-field
+          variant="underlined"
+          class="mx-auto justify-center emailField"
+          type="text"
+          placeholder="Email"
           v-model="email"
         />
-      
+
         <v-text-field
-          variant="underlined" 
-          class="mx-auto justify-center passwordField mb-4" 
-          type="password" 
-          placeholder="Senha" 
+          variant="underlined"
+          class="mx-auto justify-center passwordField mb-4"
+          type="password"
+          placeholder="Senha"
           v-model="password"
         />
 
         <v-btn
-          class="btnRegister mb-2" 
-          @click="register" 
-          rounded 
+          class="btnRegister mb-2"
+          @click="register"
+          rounded
           width="280">
           <p class="btnRegisterText">Criar conta</p>
         </v-btn>
-      
+
         <v-container max-width="20" class="d-flex distancerDivider mx-auto">
           <v-divider class="mx-auto ml-10" :thickness="3" color="white" width="10"></v-divider>
             <p class="mt-n2 mx-3" style="color: white; font-size: 12px">ou</p>
           <v-divider class="mx-auto mr-10" :thickness="3" color="white" width="10"></v-divider>
         </v-container>
 
-        <v-btn 
-          class="btnRegister" 
-          rounded  
-          @click="signInWithGoogle" 
+        <v-btn
+          class="btnRegister"
+          rounded
+          @click="signInWithGoogle"
           width="280">
           <v-img style="position: absolute; z-index: 1" src="/src/assets/googleicon.png" />
           <p class="btnRegisterText">Cadastre-se com sua conta do Google</p>
@@ -54,9 +62,10 @@
 
 <script setup>
   import { ref } from "vue";
-  import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+  import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
   import { useRouter } from 'vue-router';
 
+  const name = ref("");
   const email = ref("");
   const password = ref("");
   const router = useRouter();
@@ -65,6 +74,9 @@
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(() => {
+        updateProfile(auth.currentUser, {
+        displayName: name.value
+        })
         console.log("Successfully registered");
         router.push('/feed');
       })
@@ -85,7 +97,7 @@
         console.error(error);
       });
   };
-  
+
   function goToLogin() {
     router.push('/login');
   }
@@ -124,8 +136,8 @@
 
 .btnRegisterText {
   color: #ffffff;
-  font-weight: 500; 
-  font-size: 12px; 
+  font-weight: 500;
+  font-size: 12px;
   font-family: poppins;
   text-transform: initial;
 }
