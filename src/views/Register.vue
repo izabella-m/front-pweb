@@ -15,7 +15,7 @@
       
         <v-text-field
           variant="underlined" 
-          class="mx-auto justify-center passwordField mb-10" 
+          class="mx-auto justify-center passwordField mb-4" 
           type="password" 
           placeholder="Senha" 
           v-model="password"
@@ -29,7 +29,7 @@
           <p class="btnRegisterText">Criar conta</p>
         </v-btn>
       
-        <v-container class="d-flex distancerDivider">
+        <v-container max-width="20" class="d-flex distancerDivider mx-auto">
           <v-divider class="mx-auto ml-10" :thickness="3" color="white" width="10"></v-divider>
             <p class="mt-n2 mx-3" style="color: white; font-size: 12px">ou</p>
           <v-divider class="mx-auto mr-10" :thickness="3" color="white" width="10"></v-divider>
@@ -89,7 +89,7 @@
   function goToLogin() {
     router.push('/login');
   }
-  
+
 </script>
 
 <style>
@@ -116,9 +116,6 @@
   max-width: 350px;
 }
 
-.distancerDivider {
-  margin-left: 10px;
-}
 
 .btnRegister {
   background: linear-gradient(to right, #2203FF, #C40D60) !important;
@@ -131,6 +128,10 @@
   font-size: 12px; 
   font-family: poppins;
   text-transform: initial;
+}
+
+.distancerDivider {
+  max-width: 50px;
 }
 
 .passwordField {
