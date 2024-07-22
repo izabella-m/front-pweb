@@ -36,7 +36,7 @@
             multiple
           >
             <v-chip
-              v-for="(tag, index) in hiddenTags"
+              v-for="(tag, index) in hddenTags"
               :key="'hidden-' + index"
               class="mx-auto chipYears"
             >
@@ -49,21 +49,21 @@
       </v-card> 
     </div> -->
     
-    <div id="nav" :elevation="2">
-      <router-link to="/" id="logo">
+    <div id="nav" :elevation="2" class="d-flex">
         <!-- <v-img width="70" src="/src/assets/logoNavBar.png" id="logo"></v-img> -->
-      </router-link>
-      <router-link id="btnHome" to="/">Home</router-link>
-      <router-link id="btnExplore" to="/popular">Em alta</router-link>
-      <router-link id="btnTopRatings" to="/explore">Explorar</router-link> 
-      <div class="justify-end">
-        <v-icon>mdi-heart-outline</v-icon>
-        <v-icon>mdi-account</v-icon>
-      </div>
-    <!-- <v-btn prepend-icon="mdi-home-variant-outline" value="home">Home</v-btn>
-      <v-btn prepend-icon="mdi-compass-outline" value="account">Explore</v-btn>
-      <v-btn prepend-icon="mdi-star-outline" value="users">Top Ratings</v-btn> -->
+         <div class="d-flex me-auto">
+          <router-link to="/feed"><h2 class="logo ml-10 mr-12">Lumini</h2></router-link>
+          <router-link id="btnExplore" to="/popular"><p class="textsNavbar mt-n2">Em alta</p></router-link>
+          <router-link id="btnTopRatings" to="/explore"><p class="textsNavbar mt-n2">Explorar</p></router-link>
+        </div>
+        <div>
+          <div class="justify-end">
+            <v-btn variant="plain" to="/favorites"><v-icon>mdi-heart-outline</v-icon></v-btn>
+            <v-btn to="/profile"><v-icon>mdi-account</v-icon></v-btn>
+          </div>
+        </div>
     </div>
+    
 </template>
 
 <script>
@@ -158,12 +158,23 @@ export default {
 </script>
 
 <style>
-.v-btn:hover {
-  color: red;
+
+.logo {
+  font-family: Poppins;
+  background: linear-gradient(to right, #2203FF, #C40D60);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: pointer;
 }
 
-.v-btn:hover .v-icon {
-  color: red;
+.textsNavbar {
+  font-family: Inter;
+}
+
+.textsNavbar:hover {
+  background: linear-gradient(to right, #2203FF, #C40D60);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nameFilterTitle {
