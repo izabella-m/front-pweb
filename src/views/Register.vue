@@ -54,7 +54,7 @@
 
         <v-spacer></v-spacer>
 
-        <p class="LoggedText mt-10">Já tem cadastro?<v-btn width="4" variant="icon" class="LoggedTextClick mb-1 ml-n3" @click="goToLogin"><p style="font-size: 12px; color: #ffffff; ">Login</p></v-btn></p>
+        <p class="LoggedText mt-10">Já tem cadastro?<v-btn width="4" variant="icon" class="LoggedTextClick mb-1 ml-n3" @click="goToLogin"><p style="font-size: 12px; color: #ffffff; ">Entre</p></v-btn></p>
       </v-responsive>
     </v-container>
   </v-app>

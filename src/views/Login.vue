@@ -4,26 +4,26 @@
       <v-responsive class="align-center text-center fill-height">
         <h1 class="titleLoginPage">Bem-vindo de volta</h1>
         <p class="textDescriptionLogin mb-5">Entre para explorar e continue sua jornada pelo mundo dos filmes</p>
-        <v-text-field 
-          variant="underlined" 
-          type="text" 
-          placeholder="Email" 
+        <v-text-field
+          variant="underlined"
+          type="text"
+          placeholder="Email"
           v-model="email"
-          class="mx-auto justify-center emailField" 
+          class="mx-auto justify-center emailField"
         />
-        <v-text-field 
-          variant="underlined" 
-          class="mx-auto justify-center passwordField mb-10" 
-          type="password" 
-          placeholder="Password" 
+        <v-text-field
+          variant="underlined"
+          class="mx-auto justify-center passwordField mb-10"
+          type="password"
+          placeholder="Senha"
           v-model="password"
-        />      
+        />
         <p v-if="errMsg">{{ errMsg }}</p>
-        <v-btn 
+        <v-btn
           @click="register"
-          class="btnLogin"  
-          rounded 
-          width="280"> 
+          class="btnLogin"
+          rounded
+          width="280">
           <p class="btnLoginText">Entre</p>
         </v-btn>
 
@@ -33,11 +33,11 @@
           <v-divider class="mx-auto mr-10" :thickness="3" color="white" width="10"></v-divider>
         </v-container>
 
-        <v-btn 
+        <v-btn
           @click="signInWithGoogle"
-          class="btnLogin"  
-          rounded 
-          width="280"> 
+          class="btnLogin"
+          rounded
+          width="280">
             <p class="btnLoginText">Entre com sua conta do Google</p>
         </v-btn>
 
@@ -144,8 +144,8 @@ const router = useRouter();
 
 .btnLoginText {
   color: #ffffff;
-  font-weight: 500; 
-  font-size: 12px; 
+  font-weight: 500;
+  font-size: 12px;
   font-family: poppins;
   text-transform: initial;
 }
