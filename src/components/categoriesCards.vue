@@ -102,8 +102,7 @@ export default {
 
 
 .categorieCard:hover {
-
-  background-color: #f1ba21 !important;
+  background: linear-gradient(to right, #2203FF, #C40D60) !important;
 }
 
 </style>
