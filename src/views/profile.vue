@@ -1,8 +1,7 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <v-card>
+  <v-app style="background-color: #1e1e1e">
+    <v-container class="fill-height mx-auto justify-center">
+        <v-card width="500" color="#343434">
           <v-card-title>
             <span class="headline">Perfil</span>
           </v-card-title>
@@ -15,19 +14,18 @@
                   </v-avatar>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="name" label="Nome" readonly></v-text-field>
-                  <v-text-field v-model="email" label="Email" readonly></v-text-field>
+                  <v-text-field variant="underlined" v-model="name" label="Nome" readonly></v-text-field>
+                  <v-text-field variant="underlined" v-model="email" label="Email" readonly></v-text-field>
                 </v-col>
                 <v-col cols="12" class="d-flex justify-center mt-4">
-                  <v-btn color="error" @click="signOutUser">Sair</v-btn>
+                  <v-btn color="error" @click="signOutUser"><p style="font-family: Inter; font-size: 14px">Sair</p></v-btn>
                 </v-col>
               </v-row>
             </v-container>
           </v-card-text>
         </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+    </v-container>  
+  </v-app>
 </template>
 
 <script setup>
